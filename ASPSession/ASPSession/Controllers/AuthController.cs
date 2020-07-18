@@ -66,15 +66,15 @@ namespace ASPSession.Controllers
         }
 
         [HttpPost]
-        public ActionResult SignIn(string Username, string Password)
+        public ActionResult SignIn([Bind(Include = "Username,Password")] User user)
         {
-            User activeUser = db.users.FirstOrDefault(u => u.Username.ToLower() == Username.ToLower());
+            User activeUser = db.users.FirstOrDefault(u => u.Username.ToLower() == user.Username.ToLower());
 
             if (activeUser != null)
             {
                 string hashedPassword = activeUser.Password;
 
-                if (Crypto.VerifyHashedPassword(hashedPassword, Password))
+                if (Crypto.VerifyHashedPassword(hashedPassword, user.Password))
                 {
                     Session["Login"] = true;
                     Session["UserID"] = activeUser.ID;
